@@ -29,56 +29,34 @@ public class RemoteDriver extends Configured implements Tool {
         //set the configuration here 
         Configuration conf = new Configuration();
         
-        //set fs
-        
-        //set yarn
-        conf.set("yarn.resourcemanager.address", "hdubuscvm01:8032"); // see step 3
-        
-        conf.set("hadoop.job.user", "patrick");
-
-        
-       // conf.set("yarn.nodemanager.hostname", "HDUBUSCVM01");
+        //set hdfs address
+        conf.set("fs.defaultFS", "hdfs://hdubuscvm01:9000/"); 
+        //set yarn address
+        conf.set("yarn.resourcemanager.address", "hdubuscvm01:8032"); 
+        // set mapreduce framework
         conf.set("mapreduce.framework.name", "yarn"); 
-      //  conf.set("fs.default.name","hdfs://hdubuscvm01:9000");
-        conf.set("fs.defaultFS", "hdfs://hdubuscvm01:9000/"); // see step 2
-        conf.set("yarn.app.mapreduce.am.env","HADOOP_MAPRED_HOME=/usr/local/hadoop");
-        conf.set("mapreduce.map.env","HADOOP_MAPRED_HOME=/usr/local/hadoop");
-        conf.set("mapreduce.reduce.env","HADOOP_MAPRED_HOME=/usr/local/hadoop");
-        conf.set("yarn.nodemanager.aux-services","mapreduce_shuffle");
-        conf.set("yarn.nodemanager.aux-services.mapreduce_shuffle.class","org.apache.hadoop.mapred.ShuffleHandler");
-//         conf.set("yarn.application.classpath",    
-//                     "$HADOOP_CONF_DIR,$HADOOP_COMMON_HOME/*,$HADOOP_COMMON_HOME/lib/*,"
-//                        + "$HADOOP_HDFS_HOME/*,$HADOOP_HDFS_HOME/lib/*,"
-//                        + "$HADOOP_YARN_HOME/*,$HADOOP_YARN_HOME/lib/*,"
-//                        + "$HADOOP_MAPRED_HOME/*,$HADOOP_MAPRED_HOME/lib/*");      
-         conf.set("yarn.application.classpath",  
-         "﻿/usr/local/hadoop/etc/hadoop,/usr/local/hadoop/share/hadoop/common/lib/*,/usr/local/hadoop/share/hadoop/common/*,/usr/local/hadoop/share/hadoop/hdfs,/usr/local/hadoop/share/hadoop/hdfs/lib/*,/usr/local/hadoop/share/hadoop/hdfs/*,/usr/local/hadoop/share/hadoop/mapreduce/lib/*,/usr/local/hadoop/share/hadoop/mapreduce/*,/usr/local/hadoop/share/hadoop/yarn,/usr/local/hadoop/share/hadoop/yarn/lib/*,/usr/local/hadoop/share/hadoop/yarn/*");
-
-//        conf.set("mapreduce.application.classpath", 
-//                    "$HADOOP_MAPRED_HOME/share/hadoop/mapreduce/*,$HADOOP_MAPRED_HOME/share/hadoop/mapreduce/lib/*," 
-//                    + "$HADOOP_MAPRED_HOME/share/hadoop/common/*,$HADOOP_MAPRED_HOME/share/hadoop/common/lib/*," 
-//                    + "$HADOOP_MAPRED_HOME/share/hadoop/yarn/*,$HADOOP_MAPRED_HOME/share/hadoop/yarn/lib/*,"
-//                    + "$HADOOP_MAPRED_HOME/share/hadoop/hdfs/*,$HADOOP_MAPRED_HOME/share/hadoop/hdfs/lib/*");
-//        
-
-//conf.set("fs.default.name","hdfs://hdubuscvm01:9000");
-//
-//conf.set("fs.defaultFS", "hdfs://HDUBUSCVM01:9000/");
-//conf.set("mapreduce.framework.name","yarn");
-//conf.set("yarn.app.mapreduce.am.env","HADOOP_MAPRED_HOME=/usr/local/hadoop");
-//conf.set("mapreduce.map.env","HADOOP_MAPRED_HOME=/usr/local/hadoop");
-//conf.set("mapreduce.reduce.env","HADOOP_MAPRED_HOME=/usr/local/hadoop");     
-////conf.set("dfs.replication","1");
-////conf.set("dfs.name.dir","file:///home/patrick/pseudo/dfs/name");
-////conf.set("dfs.data.dir","file:///home/patrick/pseudo/dfs/data");
-////conf.set("dfs.permission","true");
-//conf.set("yarn.nodemanager.aux-services","mapreduce_shuffle");
-//conf.set("yarn.nodemanager.auxservices.mapreduce.shuffle.class","org.apache.hadoop.mapred.ShuffleHandler");
-
-
-       conf.set("mapreduce.job.jar","./target/mapreduce-1.0-SNAPSHOT.jar");
         
-        Configuration testConfig = ((Tool)new Driver()).getConf();
+        //set jar path
+      // conf.set("mapreduce.job.jar","./target/mapreduce-1.0-SNAPSHOT.jar");
+        
+        
+       // conf.set("hadoop.job.user", "patrick");
+        
+         conf.set("yarn.application.classpath",  
+         "$HADOOP_HOME/etc/hadoop,"  //$HADOOP_CONF_DIR
+        + "$HADOOP_HOME/share/hadoop/common/lib/*," // $HADOOP_COMMON_HOME/lib/*,
+            + "$HADOOP_HOME/share/hadoop/common/*," // $HADOOP_COMMON_HOME/*
+                 + "$HADOOP_HOME/share/hadoop/hdfs," 
+            +  "$HADOOP_HOME/share/hadoop/hdfs/lib/*," //$HADOOP_HDFS_HOME/lib/*,"
+                 + "$HADOOP_HOME/share/hadoop/hdfs/*," //"$HADOOP_HDFS_HOME/*,
+            +"$HADOOP_HOME/share/hadoop/mapreduce/lib/*," //$HADOOP_MAPRED_HOME/lib/*
+                 + "$HADOOP_HOME/share/hadoop/mapreduce/*," //$HADOOP_MAPRED_HOME/*
+            + "$HADOOP_HOME/share/hadoop/yarn,"             
+                 + "$HADOOP_HOME/share/hadoop/yarn/lib/*,"  //$HADOOP_YARN_HOME/lib/*
+                 + "$HADOOP_HOME/share/hadoop/yarn/*"); // "$HADOOP_YARN_HOME/*
+
+
+
         
         int res = ToolRunner.run(conf, (Tool) new RemoteDriver(),
                 args);
@@ -138,7 +116,7 @@ public class RemoteDriver extends Configured implements Tool {
         
         Job job = Job.getInstance(conf, "WordCount");
         
-        //job.setJar("./target/mapreduce-1.0-SNAPSHOT.jar");
+        job.setJar("./target/mapreduce-1.0-SNAPSHOT.jar");
         job.setJarByClass(Driver.class);
         
         if (args.length == 0)
